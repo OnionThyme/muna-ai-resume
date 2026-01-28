@@ -6,7 +6,7 @@ import { RESUME_CONTENT, PROJECTS } from "../constants";
  * Queries the AI about Muna's experience using grounded context.
  */
 export const queryExperience = async (prompt: string) => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: (import.meta.env.VITE_API_KEY || process.env.API_KEY) });
   
   const fullContext = `
     RESUME SUMMARY:
