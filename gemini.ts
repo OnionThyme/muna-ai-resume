@@ -31,8 +31,8 @@ export const queryExperience = async (prompt: string) => {
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: prompt,
+      model: 'gemini-2.5-flash',
+      contents: [{ parts: [{ text: prompt }] }],
       config: {
         systemInstruction,
         temperature: 0.1,
@@ -69,8 +69,8 @@ export const analyzeJobFit = async (jobDescription: string) => {
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: `Analyze this job description for fit: ${jobDescription}`,
+      model: 'gemini-2.5-flash',
+      contents: [{ parts: [{ text: `Analyze this job description for fit: ${jobDescription}` }] }],
       config: {
         systemInstruction,
         responseMimeType: "application/json",
@@ -105,10 +105,11 @@ export const analyzeJobFit = async (jobDescription: string) => {
       },
     });
     
-    const text = response.text || '{}';
-    return JSON.parse(text);
+    const rawText = response.text || '{}';
+    const cleanedText = cleanJson(rawText);
+    return JSON.parse(cleanedText);
   } catch (error) {
-    console.error("Fit Analysis Error:", error);
+    console.error("Gemini API Error (Fit Analysis):", error);
     throw error;
   }
 };
